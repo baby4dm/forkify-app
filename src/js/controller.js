@@ -3,6 +3,10 @@ import recipeView from './views/recipeView.js';
 
 const controlRecipes = async function () {
   recipeView.renderSpinner();
-  await model.loadRecipe();
+  const id = window.location.hash.slice(1);
+  await model.loadRecipe(id);
 };
-controlRecipes();
+
+['hashchange', 'load'].forEach(el =>
+  window.addEventListener(el, controlRecipes),
+);

@@ -1,8 +1,8 @@
 export const state = { recipe: {} };
 
-export const loadRecipe = async function () {
+export const loadRecipe = async function (id) {
   const recipe = await fetch(
-    'https://forkify-api.jonas.io/api/v2/recipes/5ed6604591c37cdc054bc886',
+    `https://forkify-api.jonas.io/api/v2/recipes/${id}`,
   );
   console.log(recipe);
 };
