@@ -5,6 +5,7 @@ const controlRecipes = async function () {
   recipeView.renderSpinner();
   const id = window.location.hash.slice(1);
   await model.loadRecipe(id);
+  recipeView.render(model.state.recipe);
 };
 
 ['hashchange', 'load'].forEach(el =>
