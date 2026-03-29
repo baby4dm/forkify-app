@@ -1,11 +1,12 @@
+import { getJsonResponse } from './helper';
+
 export const state = { recipe: {} };
 
 export const loadRecipe = async function (id) {
-  const recipeResponse = await fetch(
-    `https://forkify-api.jonas.io/api/v2/recipes/${id}`,
-  );
-  const recipeData = await recipeResponse.json();
-  this.state.recipe = createRecipeObject(recipeData);
+  try {
+    const recipeData = await getJsonResponse(id);
+    this.state.recipe = createRecipeObject(recipeData);
+  } catch (error) {}
 };
 
 const createRecipeObject = function (recipe) {
