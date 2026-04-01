@@ -12,6 +12,7 @@ const controlRecipes = async function () {
     await model.loadRecipe(id);
 
     recipeView.render(model.state.recipe);
+    resultsView.update(model.getSearchResultsPage());
   } catch (error) {
     recipeView.renderError();
   }
