@@ -66,3 +66,13 @@ export const getSearchResultsPage = function (page = state.search.page) {
 
   return state.search.results.slice(start, end);
 };
+
+export const updateServings = function (newServings) {
+  if (newServings < 1) return;
+  this.state.recipe.ingredients.forEach(
+    ing =>
+      (ing.quantity =
+        (ing.quantity * newServings) / this.state.recipe.servings),
+  );
+  this.state.recipe.servings = newServings;
+};

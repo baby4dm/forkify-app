@@ -32,9 +32,15 @@ const controlPagination = async function (page) {
   resultsView.render(model.getSearchResultsPage(page));
   paginationView.render(model.state.search);
 };
+
+const controlServings = async function (servings) {
+  model.updateServings(servings);
+  recipeView.update(model.state.recipe);
+};
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
   searchView.addHandlerSearch(controlSearch);
   paginationView.addHandlerPagination(controlPagination);
+  recipeView.addHandlerServings(controlServings);
 };
 init();
