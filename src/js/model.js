@@ -16,6 +16,11 @@ export const loadRecipe = async function (id) {
   try {
     const recipeData = await getJsonResponse(id);
     this.state.recipe = createRecipeObject(recipeData);
+    if (this.state.bookmarks.some(el => el.id === id)) {
+      this.state.recipe.bookmarked = true;
+    } else {
+      this.state.recipe.bookmarked = false;
+    }
   } catch (error) {
     throw error;
   }
@@ -80,6 +85,9 @@ export const updateServings = function (newServings) {
 };
 
 export const addBookmarks = function (recipe) {
+  if (this.state.bookmarks.find(el => el.id === recipe.id)) {
+    return;
+  }
   recipe.bookmarked = true;
   this.state.bookmarks.push(recipe);
 };
