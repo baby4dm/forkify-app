@@ -8,6 +8,10 @@ class BookmarksView extends View {
   _generateMarkup() {
     return this._data.map(el => previewView.render(el, false)).join('');
   }
+
+  addHandlerLoad(func) {
+    window.addEventListener('load', func);
+  }
 }
 
 export default new BookmarksView();

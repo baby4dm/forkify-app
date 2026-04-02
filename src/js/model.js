@@ -90,6 +90,7 @@ export const addBookmarks = function (recipe) {
   }
   recipe.bookmarked = true;
   this.state.bookmarks.push(recipe);
+  localStorage.setItem('bookmarks', JSON.stringify(this.state.bookmarks));
 };
 
 export const deleteBookmarks = function (id) {
@@ -97,4 +98,5 @@ export const deleteBookmarks = function (id) {
   if (!index === -1) return;
   this.state.bookmarks.splice(index, 1);
   this.state.recipe.bookmarked = false;
+  localStorage.setItem('bookmarks', JSON.stringify(this.state.bookmarks));
 };
