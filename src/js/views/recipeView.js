@@ -44,13 +44,11 @@ class RecipeView extends View {
           </div>
 
           <div class="recipe__user-generated">
-            <svg>
-              <use href="${icons}#icon-user"></use>
-            </svg>
+
           </div>
           <button class="btn--round">
             <svg class="">
-              <use href="${icons}#icon-bookmark-fill"></use>
+              <use href="${icons}#icon-bookmark${this._data.bookmarked ? '-fill' : ''}"></use>
             </svg>
           </button>
         </div>
@@ -107,6 +105,13 @@ class RecipeView extends View {
     });
   }
 
+  addHandlerBookmarks(func) {
+    this._parentElement.addEventListener('click', e => {
+      const btn = e.target.closest('.btn--round');
+      if (!btn) return;
+      func(this._data);
+    });
+  }
   addHandlerRender(func) {
     ['hashchange', 'load'].forEach(el => window.addEventListener(el, func));
   }

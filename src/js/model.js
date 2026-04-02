@@ -9,6 +9,7 @@ export const state = {
     page: 1,
     resultsPerPage: RES_PER_PAGE,
   },
+  bookmarks: [],
 };
 
 export const loadRecipe = async function (id) {
@@ -41,6 +42,7 @@ export const loadSearches = async function (query) {
       throw new Error('Cannot find anything');
     }
     this.state.search.results = mapToPreviewObjects(searchData);
+    this.state.search.page = 1;
   } catch (error) {
     throw error;
   }
@@ -75,4 +77,16 @@ export const updateServings = function (newServings) {
         (ing.quantity * newServings) / this.state.recipe.servings),
   );
   this.state.recipe.servings = newServings;
+};
+
+export const addBookmarks = function (recipe) {
+  recipe.bookmarked = true;
+  this.state.bookmarks.push(recipe);
+};
+
+export const deleteBookmarks = function (id) {
+  const index = this.state.bookmarks.findIndex(el => el.id === id);
+  if (!index === -1) return;
+  this.state.bookmarks.splice(index, 1);
+  this.state.recipe.bookmarked = false;
 };
