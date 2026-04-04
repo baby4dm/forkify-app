@@ -43,9 +43,11 @@ class RecipeView extends View {
             </div>
           </div>
 
-          <div class="recipe__user-generated">
-
-          </div>
+          <div class="recipe__user-generated ${this._data.key ? '' : 'hidden'}">
+              <svg>
+                <use href="${icons}#icon-user"></use>
+              </svg>
+           </div>
           <button class="btn--round">
             <svg class="">
               <use href="${icons}#icon-bookmark${this._data.bookmarked ? '-fill' : ''}"></use>
@@ -97,11 +99,11 @@ class RecipeView extends View {
             </li>`;
   }
 
-  addHandlerServings(func) {
+  addHandlerServings(handler) {
     this._parentElement.addEventListener('click', e => {
       const btn = e.target.closest('.btn--increase-servings');
       if (!btn) return;
-      func(+btn.dataset.servings);
+      handler(+btn.dataset.servings);
     });
   }
 

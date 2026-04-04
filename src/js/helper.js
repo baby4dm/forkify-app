@@ -7,9 +7,17 @@ const timeout = function (s) {
   });
 };
 
-export const getJsonResponse = async function (url) {
+export const AJAX = async function (url, uploadData = undefined) {
   try {
-    const recipePromise = fetch(`${API_URL}${url}`);
+    const recipePromise = uploadData
+      ? fetch(`${API_URL}${url}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(uploadData),
+        })
+      : fetch(`${API_URL}${url}`);
     const recipeResponse = await Promise.race([
       recipePromise,
       timeout(TIMEOUT_SEC),

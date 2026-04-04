@@ -9,8 +9,8 @@ class BookmarksView extends View {
     return this._data.map(el => previewView.render(el, false)).join('');
   }
 
-  addHandlerLoad(func) {
-    window.addEventListener('load', func);
+  addHandlerLoad(handler) {
+    window.addEventListener('load', handler);
   }
 }
 

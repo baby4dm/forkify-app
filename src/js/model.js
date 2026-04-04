@@ -1,5 +1,5 @@
-import { getJsonResponse } from './helper';
-import { RES_PER_PAGE } from './config';
+import { AJAX } from './helper';
+import { RES_PER_PAGE, API_KEY } from './config';
 
 export const state = {
   recipe: {},
@@ -14,7 +14,7 @@ export const state = {
 
 export const loadRecipe = async function (id) {
   try {
-    const recipeData = await getJsonResponse(id);
+    const recipeData = await AJAX(`${id}?key=${API_KEY}`);
     this.state.recipe = createRecipeObject(recipeData);
     if (this.state.bookmarks.some(el => el.id === id)) {
       this.state.recipe.bookmarked = true;
@@ -27,7 +27,7 @@ export const loadRecipe = async function (id) {
 };
 
 const createRecipeObject = function (recipe) {
-  const { recipe: data } = recipe.data;
+  const { recipe: data } = recipe.data ?? recipe;
   return {
     id: data.id,
     image: data.image_url,
@@ -37,12 +37,13 @@ const createRecipeObject = function (recipe) {
     ingredients: data.ingredients,
     publisher: data.publisher,
     source: data.source_url,
+    ...(data.key && { key: data.key }),
   };
 };
 
 export const loadSearches = async function (query) {
   try {
-    const searchData = await getJsonResponse(`?search=${query}`);
+    const searchData = await AJAX(`?search=${query}&key=${API_KEY}`);
     if (searchData.results < 1) {
       throw new Error('Cannot find anything');
     }
@@ -55,12 +56,14 @@ export const loadSearches = async function (query) {
 
 const mapToPreviewObjects = function (recipe) {
   const { recipes } = recipe.data;
+
   return recipes.map(r => {
     return {
       id: r.id,
       image: r.image_url,
       title: r.title,
       publisher: r.publisher,
+      ...(r.key && { key: r.key }),
     };
   });
 };
@@ -99,4 +102,38 @@ export const deleteBookmarks = function (id) {
   this.state.bookmarks.splice(index, 1);
   this.state.recipe.bookmarked = false;
   localStorage.setItem('bookmarks', JSON.stringify(this.state.bookmarks));
+};
+
+export const uploadRecipe = async function (recipe) {
+  try {
+    const ingredients = Object.entries(recipe)
+      .filter(e => e[0].includes('ingredient') && e[1] !== '')
+      .map(ing => {
+        const ingArr = ing[1].split(',').map(el => el.trim());
+        if (ingArr.length < 3) {
+          throw new Error(
+            'Wrong ingredient fromat! Please use the correct format :)',
+          );
+        }
+        const [quantity, unit, description] = ingArr;
+
+        return { quantity: quantity ? +quantity : null, unit, description };
+      });
+
+    const newRecipe = {
+      source_url: recipe.source,
+      image_url: recipe.image,
+      title: recipe.title,
+      publisher: recipe.publisher,
+      cooking_time: +recipe.time,
+      servings: +recipe.servings,
+      ingredients: ingredients,
+    };
+    const response = await AJAX(`?key=${API_KEY}`, newRecipe);
+    const recipeObj = createRecipeObject(response);
+    this.addBookmarks(recipeObj);
+    this.state.recipe = recipeObj;
+  } catch (err) {
+    throw err;
+  }
 };
