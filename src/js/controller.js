@@ -71,7 +71,10 @@ const controlAddRecipe = async function (recipe) {
     bookmarksView.render(model.state.bookmarks);
 
     window.history.pushState(null, '', `#${model.state.recipe.id}`);
-    setTimeout(() => addRecipeView.handleToogle(), UPLOAD_TIMEOUT_SEC * 1000);
+    setTimeout(() => {
+      addRecipeView.handleToogle();
+      setTimeout(() => addRecipeView.resetForm(), 500);
+    }, UPLOAD_TIMEOUT_SEC * 1000);
   } catch (error) {
     addRecipeView.renderError(error);
   }
@@ -84,6 +87,5 @@ const init = function () {
   recipeView.addHandlerServings(controlServings);
   recipeView.addHandlerBookmarks(controlEditBookmarks);
   addRecipeView.addHandlerSubmitForm(controlAddRecipe);
-  localStorage.clear();
 };
 init();
